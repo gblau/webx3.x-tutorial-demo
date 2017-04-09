@@ -1,2 +1,13 @@
 /.idea
+
 /webx.iml
+/commons/commons.iml
+/engine/engine.iml
+/service/service.iml
+/test/test.iml
+/web/web.iml
+/commons/target/
+/engine/target/
+/service/target/
+/test/target/
+/web/target/
