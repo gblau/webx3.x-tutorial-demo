@@ -7,7 +7,6 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>engine</module>
-        <module>engine</module>
         <module>commons</module>
         <module>service</module>
         <module>web</module>
