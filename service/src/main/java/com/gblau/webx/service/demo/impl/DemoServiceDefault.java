@@ -7,11 +7,13 @@ import com.gblau.webx.service.base.BaseService;
 import com.gblau.webx.service.base.impl.BaseServiceDefault;
 import com.gblau.webx.service.demo.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @author gblau
  * @date 2017-05-24
  */
+@Service
 public class DemoServiceDefault extends BaseServiceDefault<Demo> implements DemoService {
     @Autowired
     private DemoMapper dao;

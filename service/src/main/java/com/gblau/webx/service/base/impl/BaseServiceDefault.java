@@ -10,7 +10,7 @@ import java.util.List;
  * @date 2017-04-09
  */
 public abstract class BaseServiceDefault<T> implements BaseService<T> {
-    private Mapper<T> dao;
+    private Mapper<T> mapper;
 
     /**
      * base类并不提供具体的dao实现，所以需要设置实际运行的Dao类。
@@ -18,7 +18,7 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public void setBaseMapper(Mapper<T> dao) {
-        this.dao = dao;
+        this.mapper = dao;
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public int deleteByPrimaryKey(String id) {
-        return dao.deleteByPrimaryKey(id);
+        return mapper.deleteByPrimaryKey(id);
     }
 
     /**
@@ -40,7 +40,7 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public int insert(T record) {
-        return dao.insert(record);
+        return mapper.insert(record);
     }
 
     /**
@@ -51,7 +51,7 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public T findByPrimaryKey(String id) {
-        return dao.selectByPrimaryKey(id);
+        return mapper.selectByPrimaryKey(id);
     }
 
     /**
@@ -61,7 +61,7 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public List<T> findAllElements() {
-        return dao.selectAllElements();
+        return mapper.selectAllElements();
     }
 
     /**
@@ -72,6 +72,6 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
      */
     @Override
     public int updateByPrimaryKey(T record) {
-        return dao.updateByPrimaryKey(record);
+        return mapper.updateByPrimaryKey(record);
     }
 }
