@@ -1,4 +1,4 @@
-package com.gblau.webx.engine.dao;
+package com.gblau.webx.engine.dao.base;
 
 import java.util.List;
 
@@ -7,9 +7,9 @@ import java.util.List;
  * @date 2017-04-09
  */
 public interface Mapper<T> {
-    int deleteByPrimaryKey(int id);
+    int deleteByPrimaryKey(String id);
     int insert(T record);
-    T selectByPrimaryKey(int id);
+    T selectByPrimaryKey(String id);
     List<T> selectAllElements();
     int updateByPrimaryKey(T record);
 }
