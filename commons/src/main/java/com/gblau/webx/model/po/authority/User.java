@@ -5,8 +5,18 @@ package com.gblau.webx.model.po.authority;
  * @date 2017-05-22
  */
 public class User {
+    private String id;
     private String username;
     private String password;
+
+    public String getId() {
+        return id;
+    }
+
+    public User setId(String id) {
+        this.id = id;
+        return this;
+    }
 
     public String getUsername() {
         return username;
