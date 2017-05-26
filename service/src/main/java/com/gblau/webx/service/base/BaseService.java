@@ -2,8 +2,6 @@ package com.gblau.webx.service.base;
 
 import com.gblau.webx.engine.dao.base.Mapper;
 
-import java.util.List;
-
 /**
  * 通用的service处理类，满足普通的增删查改操作。
  * @author gblau
@@ -40,6 +38,13 @@ public interface BaseService<T> {
     int insert(T record);
 
     /**
+     * 插入一个bean对象中不为null的数据。
+     * @param record
+     * @return
+     */
+    int insertSelective(T record);
+
+    /**
      * 通过主键查找一个数据，支持Mysql int类型主键查找。
      * @param id
      * @return
@@ -47,15 +52,16 @@ public interface BaseService<T> {
     T findByPrimaryKey(String id);
 
     /**
-     * 通过主键查找所有数据。
-     * @return
-     */
-    List<T> findAllElements();
-
-    /**
      * 通过record中的ID更新指定字段, 具体须有具体的Mapper实现
      * @param record
      * @return
      */
     int updateByPrimaryKey(T record);
+
+    /**
+     * 更新指定数据，即对象中不为null的数据。
+     * @param record
+     * @return
+     */
+    int updateByPrimaryKeySelective(T record);
 }

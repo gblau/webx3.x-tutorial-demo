@@ -3,8 +3,6 @@ package com.gblau.webx.service.base.impl;
 import com.gblau.webx.engine.dao.base.Mapper;
 import com.gblau.webx.service.base.BaseService;
 
-import java.util.List;
-
 /**
  * @author gblau
  * @date 2017-04-09
@@ -44,6 +42,17 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
     }
 
     /**
+     * 插入一个bean对象中不为null的数据。
+     *
+     * @param record
+     * @return
+     */
+    @Override
+    public int insertSelective(T record) {
+        return mapper.insertSelective(record);
+    }
+
+    /**
      * 通过主键查找一个数据，支持Mysql int类型主键查找。
      *
      * @param id
@@ -55,16 +64,6 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
     }
 
     /**
-     * 通过主键查找所有数据。
-     *
-     * @return
-     */
-    @Override
-    public List<T> findAllElements() {
-        return mapper.selectAllElements();
-    }
-
-    /**
      * 通过record中的ID更新指定字段, 具体须有具体的Mapper实现
      *
      * @param record
@@ -73,5 +72,16 @@ public abstract class BaseServiceDefault<T> implements BaseService<T> {
     @Override
     public int updateByPrimaryKey(T record) {
         return mapper.updateByPrimaryKey(record);
+    }
+
+    /**
+     * 更新指定数据，即对象中不为null的数据。
+     *
+     * @param record
+     * @return
+     */
+    @Override
+    public int updateByPrimaryKeySelective(T record) {
+        return mapper.updateByPrimaryKeySelective(record);
     }
 }
