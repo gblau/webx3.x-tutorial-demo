@@ -1,7 +1,83 @@
-<!DOCTYPE web-app PUBLIC
- "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
- "http://java.sun.com/dtd/web-app_2_3.dtd" >
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
 
-<web-app>
-  <display-name>Archetype Created Web Application</display-name>
+  <!-- 【初始化日志系统】 -->
+  <!-- 假设你的应用依赖了logback的jar包，那么listener就会查找/WEB-INF/logback.xml，并用它来初始化logback； -->
+  <!-- 如果你的应用依赖了log4j的jar包，那么listener也会很聪明地查找/WEB-INF/log4j.xml配置文件。 -->
+  <!-- 假如以上配置文件不存在，listener会使用默认的配置 —— 把日志打印在控制台上。 -->
+  <listener>
+    <listener-class>com.alibaba.citrus.logconfig.LogConfiguratorListener</listener-class>
+  </listener>
+
+
+  <!-- 【装载/WEB-INF/webx.xml, /WEB-INF/webx-*.xml】 -->
+  <!-- Webx利用WebxContextLoaderListener来初始化Spring，用来取代Spring的ContextLoaderListener。事实上，前者是从后者派生的。 -->
+  <!-- Listener支持对配置文件中的placeholders进行替换。 -->
+  <!-- Listener支持同时初始化多种日志系统。-->
+  <listener>
+    <listener-class>com.alibaba.citrus.webx.context.WebxContextLoaderListener</listener-class>
+  </listener>
+
+  <!-- Webx Framework使用SLF4J作为它的日志框架。因此Webx Framework理论上支持所有日志系统。然而目前为止，它只包含了log4j和
+       logback这两种日志系统的初始化模块 -->
+  <filter>
+    <filter-name>mdc</filter-name>
+    <filter-class>com.alibaba.citrus.webx.servlet.SetLoggingContextFilter</filter-class>
+  </filter>
+
+
+  <!-- 【webx响应请求流程】 -->
+  <!-- WebxFrameworkFilter —— WebxRootController —— WebxController -->
+  <!-- 首先，它会增强request、response、session的功能，并把它们打包成更易使用的RequestContext对象。 -->
+  <!-- 其次，它会调用相应子应用的pipeline，用它来做进一步的处理。 -->
+  <!-- 假如在上面的过程中出现异常，则会触发Webx Framework处理异常的过程。 -->
+  <filter>
+    <filter-name>webx</filter-name>
+    <filter-class>com.alibaba.citrus.webx.servlet.WebxFrameworkFilter</filter-class>
+
+    <!-- 需要被“排除”的URL路径，以逗号分隔，如/static, *.jpg。适合于映射静态页面、图片。 -->
+    <init-param>
+      <param-name>excludes</param-name>
+      <param-value>*.jpg,*.png,*.jpeg,*.js,*.css,*.ico</param-value>
+    </init-param>
+
+    <!-- 需要被“略过”的URL路径，以逗号分隔，如/myservlet, *.jsp。适用于映射servlet、filter。
+             对于passthru请求，webx的request-contexts服务、错误处理、开发模式等服务仍然可用。 -->
+    <init-param>
+      <param-name>passthru</param-name>
+      <param-value><!-- 这里写路径 --></param-value>
+    </init-param>
+
+  </filter>
+
+
+  <!-- 配置Shiro过滤器,先让Shiro过滤系统接收到的请求 -->
+  <!-- 这里filter-name必须对应applicationContext.xml中定义的<bean id="shiroFilter"/> -->
+  <!-- 使用[/*]匹配所有请求,保证所有的可控请求都经过Shiro的过滤 -->
+  <!-- 通常会将此filter-mapping放置到最前面(即其他filter-mapping前面),以保证它是过滤器链中第一个起作用的 -->
+  <filter>
+    <filter-name>shiroFilter</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    <init-param>
+      <!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
+      <param-name>targetFilterLifecycle</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>shiroFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>mdc</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>webx</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 </web-app>
