@@ -27,6 +27,15 @@
             <artifactId>service</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <finalName>webx</finalName>
