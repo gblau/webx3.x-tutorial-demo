@@ -1,6 +1,6 @@
 package com.gblau.webx.service.demo;
 
-import com.gblau.webx.model.po.demo.Demo;
+import com.gblau.webx.commons.model.po.demo.Demo;
 import com.gblau.webx.service.base.BaseService;
 
 /**

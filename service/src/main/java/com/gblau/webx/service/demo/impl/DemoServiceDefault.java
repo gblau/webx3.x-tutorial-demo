@@ -2,7 +2,7 @@ package com.gblau.webx.service.demo.impl;
 
 import com.gblau.webx.engine.dao.base.Mapper;
 import com.gblau.webx.engine.dao.demo.DemoMapper;
-import com.gblau.webx.model.po.demo.Demo;
+import com.gblau.webx.commons.model.po.demo.Demo;
 import com.gblau.webx.service.base.BaseService;
 import com.gblau.webx.service.base.impl.BaseServiceDefault;
 import com.gblau.webx.service.demo.DemoService;

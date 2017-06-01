@@ -1,4 +1,4 @@
-package com.gblau.webx.util;
+package com.gblau.webx.commons.util;
 
 import java.util.Collection;
 import java.util.Map;

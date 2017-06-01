@@ -1,6 +1,6 @@
 package com.gblau.webx.service.authorization;
 
-import com.gblau.webx.model.po.authority.User;
+import com.gblau.webx.commons.model.po.authority.User;
 import com.gblau.webx.service.base.BaseService;
 
 /**

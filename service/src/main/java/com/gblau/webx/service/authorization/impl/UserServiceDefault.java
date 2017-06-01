@@ -2,7 +2,7 @@ package com.gblau.webx.service.authorization.impl;
 
 import com.gblau.webx.engine.dao.authorization.UserMapper;
 import com.gblau.webx.engine.dao.base.Mapper;
-import com.gblau.webx.model.po.authority.User;
+import com.gblau.webx.commons.model.po.authority.User;
 import com.gblau.webx.service.authorization.UserService;
 import com.gblau.webx.service.base.impl.BaseServiceDefault;
 import org.springframework.beans.factory.annotation.Autowired;

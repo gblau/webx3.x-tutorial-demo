@@ -1,4 +1,4 @@
-package com.gblau.webx.model.po;
+package com.gblau.webx.commons.util;
 
 /**
  * @author gblau
@@ -20,13 +20,10 @@ public enum Status {
 
     MISSING_PARAMETER(4004, "参数缺失"),
 
-    INTERNAL_SERVER_ERROR(5000, ""),
-
-    ;
+    INTERNAL_SERVER_ERROR(5000, "");
 
     private final int value;
     private final String reasonPhrase;
-
 
     Status(int value, String reasonPhrase) {
         this.value = value;

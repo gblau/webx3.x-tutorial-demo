@@ -1,7 +1,7 @@
-package com.gblau.webx.model.vo;
+package com.gblau.webx.commons.model.vo;
 
-import com.gblau.webx.model.po.Status;
-import com.gblau.webx.util.Assert;
+import com.gblau.webx.commons.util.Status;
+import com.gblau.webx.commons.util.Assert;
 
 /**
  * 前后端交互定义的统一返回格式。

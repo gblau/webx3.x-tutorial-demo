@@ -1,4 +1,4 @@
-package com.gblau.webx.model.po.authority;
+package com.gblau.webx.commons.model.po.authority;
 
 /**
  * @author gblau
