@@ -11,10 +11,17 @@
     <packaging>jar</packaging>
     <name>service</name>
     <dependencies>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- webx框架 -->
+        <dependency>
+            <groupId>com.alibaba.citrus</groupId>
+            <artifactId>citrus-webx-all</artifactId>
         </dependency>
 
         <!-- 兄弟项目依赖 -->
