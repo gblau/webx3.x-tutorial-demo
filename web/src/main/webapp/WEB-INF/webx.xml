@@ -140,4 +140,5 @@
 
     <beans:import resource="common/mybatis.xml" />
     <beans:import resource="biz/pulltools.xml" />
+    <beans:import resource="biz/shiro.xml"/>
 </beans:beans>
