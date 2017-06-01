@@ -45,7 +45,7 @@
              对于passthru请求，webx的request-contexts服务、错误处理、开发模式等服务仍然可用。 -->
     <init-param>
       <param-name>passthru</param-name>
-      <param-value><!-- 这里写路径 --></param-value>
+      <param-value><!-- 这里写领 --></param-value>
     </init-param>
 
   </filter>
@@ -55,11 +55,11 @@
   <!-- 这里filter-name必须对应applicationContext.xml中定义的<bean id="shiroFilter"/> -->
   <!-- 使用[/*]匹配所有请求,保证所有的可控请求都经过Shiro的过滤 -->
   <!-- 通常会将此filter-mapping放置到最前面(即其他filter-mapping前面),以保证它是过滤器链中第一个起作用的 -->
-  <filter>
+  <!--<filter>
     <filter-name>shiroFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
     <init-param>
-      <!-- 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 -->
+      &lt;!&ndash; 该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理 &ndash;&gt;
       <param-name>targetFilterLifecycle</param-name>
       <param-value>true</param-value>
     </init-param>
@@ -68,7 +68,7 @@
   <filter-mapping>
     <filter-name>shiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  </filter-mapping>-->
 
   <filter-mapping>
     <filter-name>mdc</filter-name>

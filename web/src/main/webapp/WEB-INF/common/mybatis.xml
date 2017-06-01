@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:services="http://www.alibaba.com/schema/services"
+             xmlns:ml-adapters="http://www.alibaba.com/schema/services/module-loader/adapters"
+             xmlns:ml-factories="http://www.alibaba.com/schema/services/module-loader/factories"
+             xmlns:pull-factories="http://www.alibaba.com/schema/services/pull/factories"
+             xmlns:request-contexts="http://www.alibaba.com/schema/services/request-contexts"
+             xmlns:session-encoders="http://www.alibaba.com/schema/services/request-contexts/session/encoders"
+             xmlns:session-idgens="http://www.alibaba.com/schema/services/request-contexts/session/idgens"
+             xmlns:model-encoders="http://www.alibaba.com/schema/services/request-contexts/session/model-encoders"
+             xmlns:session-stores="http://www.alibaba.com/schema/services/request-contexts/session/stores"
+             xmlns:context="http://www.springframework.org/schema/context"
+             xsi:schemaLocation="
+            	 http://www.springframework.org/schema/context
+				 http://www.springframework.org/schema/context/spring-context-3.2.xsd
+                 http://www.alibaba.com/schema/services http://localhost:8080/schema/services.xsd
+                 http://www.alibaba.com/schema/services/module-loader/adapters http://localhost:8080/schema/services-module-loader-adapters.xsd
+                 http://www.alibaba.com/schema/services/module-loader/factories http://localhost:8080/schema/services-module-loader-factories.xsd
+                 http://www.alibaba.com/schema/services/pull/factories http://localhost:8080/schema/services-pull-factories.xsd
+                 http://www.alibaba.com/schema/services/request-contexts http://localhost:8080/schema/services-request-contexts.xsd
+                 http://www.alibaba.com/schema/services/request-contexts/session/encoders http://localhost:8080/schema/services-request-contexts-session-encoders.xsd
+                 http://www.alibaba.com/schema/services/request-contexts/session/idgens http://localhost:8080/schema/services-request-contexts-session-idgens.xsd
+                 http://www.alibaba.com/schema/services/request-contexts/session/model-encoders http://localhost:8080/schema/services-request-contexts-session-model-encoders.xsd
+                 http://www.alibaba.com/schema/services/request-contexts/session/stores http://localhost:8080/schema/services-request-contexts-session-stores.xsd
+                 http://www.springframework.org/schema/beans http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd
+             ">
+
+    <!-- Mybatis Spring 标准化配置参考，使用properties配置dataSource -->
+    <!-- 如果需要引入多个配置文件，需要在每个placeholder中设置ignore-unresolvable="true" -->
+    <context:property-placeholder  location="classpath:config/jdbc.properties" ignore-unresolvable="true"/>
+
+    <!-- 一种推荐说明的数据源配置方式，用commons-dbcp真正使用了连接池技术  -->
+    <!-- 与DriverManagerDataSource不同，DriverManagerDataSource建立连接是只要有连接就新建一个connection,根本没有连接池的作用。  -->
+    <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <beans:property name="initialSize" value="${jdbc.initialSize}"/>
+        <beans:property name="maxActive" value="${jdbc.maxActive}"/>
+        <beans:property name="maxIdle" value="${jdbc.maxIdle}"/>
+        <beans:property name="minIdle" value="${jdbc.minIdle}"/>
+        <beans:property name="logAbandoned" value="${jdbc.logAbandoned}"/>
+        <beans:property name="removeAbandoned" value="${jdbc.removeAbandoned}"/>
+        <beans:property name="removeAbandonedTimeout" value="${jdbc.removeAbandonedTimeout}"/>
+        <beans:property name="maxWait" value="${jdbc.maxWait}"/>
+        <beans:property name="validationQuery" value="${jdbc.validationQuery}"/>
+        <beans:property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+        <beans:property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+        <beans:property name="timeBetweenEvictionRunsMillis"
+                        value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <beans:property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
+
+        <beans:property name="driverClassName" value="${jdbc.driver}"/>
+        <beans:property name="url" value="${jdbc.url}"/>
+        <beans:property name="username" value="${jdbc.username}"/>
+        <beans:property name="password" value="${jdbc.password}"/>
+    </beans:bean>
+
+    <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+        <beans:property name="typeAliasesPackage" value="com.gblau.webx.commons.model.po"/>
+        <beans:property name="mapperLocations"
+                        value="classpath*:mapper/*.xml"/>
+    </beans:bean>
+
+    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <beans:property name="basePackage" value="com.gblau.webx.engine.dao" />
+    </beans:bean>
+
+</beans:beans>

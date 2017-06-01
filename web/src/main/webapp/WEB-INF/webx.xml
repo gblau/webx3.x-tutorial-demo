@@ -18,7 +18,7 @@
              xmlns:context="http://www.springframework.org/schema/context"
              xsi:schemaLocation="
             	 http://www.springframework.org/schema/context
-				 http://www.springframework.org/schema/context/spring-context-3.2.xsd
+				 http://www.springframework.org/schema/context/spring-context.xsd
                  http://www.alibaba.com/schema/services http://localhost:8080/schema/services.xsd
                  http://www.alibaba.com/schema/services/module-loader/adapters http://localhost:8080/schema/services-module-loader-adapters.xsd
                  http://www.alibaba.com/schema/services/module-loader/factories http://localhost:8080/schema/services-module-loader-factories.xsd
@@ -31,7 +31,6 @@
                  http://www.springframework.org/schema/beans http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd
              ">
 
-
     <!-- 支持注解，这是Spring本身的配置 -->
     <context:annotation-config/>
     <context:component-scan base-package="com.gblau.webx.*"/>
@@ -40,6 +39,18 @@
     <services:property-placeholder>
         <property key="component">common</property>
     </services:property-placeholder>
+
+    <!-- 共享配置 所有的webx beans都需要 MappingRuleService 加载 -->
+    <beans:import resource="common/webx-component-and-root.xml" />
+
+    <!-- 异常管道。 -->
+    <beans:import resource="common/pipeline-exception.xml" />
+
+    <!-- 资源装载。 -->
+    <beans:import resource="common/resources.xml" />
+
+    <!-- URI生成。 -->
+    <beans:import resource="common/uris.xml" />
 
     <!-- 综合设置。 -->
     <services:webx-configuration>
@@ -109,58 +120,24 @@
                      keepFormFieldInMemory="true" />
 
     <!-- 将beans暴露给模板。这里定义的tools可被所有components(页面)之间共享。例如在页面可以通过$!{myPullTool.jsAndCssDomain}，直接获取类中的属性值 -->
+    <!-- 实际上pull service就相当于提供工具类，可以将工具定义成Java类，而能够在vm模板中调用 -->
     <services:pull>
         <pull-factories:utils />
         <pull-factories:page-tool />
         <pull-factories:control-tool />
+        <!-- 对应uris.xml中services:uris服务 -->
         <pull-factories:uris-tool />
-        <pull-factories:bean-tool xmlns="http://www.alibaba.com/schema/services/pull/factories" id="myPullTool" class="com.alibaba.webx.web.module.tools.common.CommonTools" scope="request"/>
+        <pull-factories:bean-tool xmlns="http://www.alibaba.com/schema/services/pull/factories" id="myPullTool" class="com.gblau.webx.web.module.tools.common.CommonTools" scope="request"/>
     </services:pull>
 
-    <!-- 装载模块。 -->
+    <!-- webx 必须要有module-loader服务 否则会抛出异常-->
+    <!-- 用来加载需要的module -->
     <services:module-loader>
         <ml-factories:class-modules>
-            <search-packages type="$1" packages="com.alibaba.webx.common.module.*" />	<!-- 要跟web项目的包名对应 -->
+            <search-packages type="$1" packages="com.gblau.webx.commons.module.*" />
         </ml-factories:class-modules>
     </services:module-loader>
 
-    <!-- Mybatis Spring 标准化配置参考，使用properties配置dataSource -->
-    <!-- 如果需要引入多个配置文件，需要在每个placeholder中设置ignore-unresolvable="true" -->
-    <context:property-placeholder  location="classpath:config/jdbc.properties" ignore-unresolvable="true"/>
-
-    <!-- 一种推荐说明的数据源配置方式，用commons-dbcp真正使用了连接池技术  -->
-    <!-- 与DriverManagerDataSource不同，DriverManagerDataSource建立连接是只要有连接就新建一个connection,根本没有连接池的作用。  -->
-    <beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-        <beans:property name="initialSize" value="${jdbc.initialSize}"/>
-        <beans:property name="maxActive" value="${jdbc.maxActive}"/>
-        <beans:property name="maxIdle" value="${jdbc.maxIdle}"/>
-        <beans:property name="minIdle" value="${jdbc.minIdle}"/>
-        <beans:property name="logAbandoned" value="${jdbc.logAbandoned}"/>
-        <beans:property name="removeAbandoned" value="${jdbc.removeAbandoned}"/>
-        <beans:property name="removeAbandonedTimeout" value="${jdbc.removeAbandonedTimeout}"/>
-        <beans:property name="maxWait" value="${jdbc.maxWait}"/>
-        <beans:property name="validationQuery" value="${jdbc.validationQuery}"/>
-        <beans:property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
-        <beans:property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
-        <beans:property name="timeBetweenEvictionRunsMillis"
-                        value="${jdbc.timeBetweenEvictionRunsMillis}"/>
-        <beans:property name="minEvictableIdleTimeMillis" value="${jdbc.minEvictableIdleTimeMillis}"/>
-
-        <beans:property name="driverClassName" value="${jdbc.driver}"/>
-        <beans:property name="url" value="${jdbc.url}"/>
-        <beans:property name="username" value="${jdbc.username}"/>
-        <beans:property name="password" value="${jdbc.password}"/>
-    </beans:bean>
-
-    <beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <beans:property name="dataSource" ref="dataSource"/>
-        <beans:property name="typeAliasesPackage" value="com.gblau.webx.model.po"/>
-        <beans:property name="mapperLocations"
-                        value="classpath*:mapper/*.xml"/>
-    </beans:bean>
-
-    <beans:bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <beans:property name="basePackage" value="com.gblau.webx.engine.dao" />
-    </beans:bean>
-
+    <beans:import resource="common/mybatis.xml" />
+    <beans:import resource="biz/pulltools.xml" />
 </beans:beans>

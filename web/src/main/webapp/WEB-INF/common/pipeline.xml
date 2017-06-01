@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:p="http://www.springframework.org/schema/p"
+             xmlns:services="http://www.alibaba.com/schema/services"
+             xmlns:pl-conditions="http://www.alibaba.com/schema/services/pipeline/conditions"
+             xmlns:pl-valves="http://www.alibaba.com/schema/services/pipeline/valves"
+             xsi:schemaLocation="
+                 http://www.alibaba.com/schema/services http://localhost:8080/schema/services.xsd
+                 http://www.alibaba.com/schema/services/pipeline/conditions http://localhost:8080/schema/services-pipeline-conditions.xsd
+                 http://www.alibaba.com/schema/services/pipeline/valves http://localhost:8080/schema/services-pipeline-valves.xsd
+                 http://www.springframework.org/schema/beans http://localhost:8080/schema/www.springframework.org/schema/beans/spring-beans.xsd
+             ">
+
+    <!-- pipeline.xml：用于Webx Turbine的流程配置。参考：http://blog.csdn.net/cpf2016/article/details/45534527 -->
+    <!-- Webx Turbine的处理流程被定义在pipeline中。Webx Framework没有规定Pipeline的内容，但Webx Turbine却定义了一系列valves. -->
+    <!-- Turbine实现了页面渲染、布局、数据验证、数据提交等一系列工作, 遵循页面驱动、约定优于配置两个设计理念。 -->
+    <!-- 2017.04.04 author: gblau -->
+
+    <services:pipeline>
+    
+        <!-- 初始化turbine rundata，并在pipelineContext中设置可能会用到的对象(如rundata、utils)，以便valve取得。 -->
+        <pl-valves:prepareForTurbine />
+
+        <!-- 设置日志系统的上下文，支持把当前请求的详情打印在日志中。 -->
+        <pl-valves:setLoggingContext />
+
+        <!-- 分析URL，取得target。 -->
+        <pl-valves:analyzeURL homepage="home/index"/>
+
+        <!-- 检查csrf token，防止csrf攻击和重复提交。假如request和session中的token不匹配，则出错，或显示expired页面。 -->
+        <pl-valves:checkCsrfToken />
+        
+        <!-- 自定义拦截器 -->
+        <pl-valves:valve class="com.gblau.webx.web.module.pipeline.demo.PipelineDemo" />
+
+        <!-- Screen，代表页面的主体.如表格 -->
+        <!-- Layout，代表页面的布局 -->
+        <!-- Control，代表嵌在screen和layout中的页面片段。例如登录表单 -->
+        <!-- 这段配置可以在webx开发文档4.3节中找到，用于处理Turbine -->
+        <!-- 这个项目中，前端是使用node.js运行的，页面逻辑完全不在后台，所以可以说没有用到静态资源的处理。
+             node.js的火热程度看，以后前后端分离可能会越来越彻底，所以类似html这种静态资源的处理可能会做的越来越少。
+             这个项目来说，webx turbine有处理的只有do这一部分。 -->
+        <pl-valves:loop>
+            <pl-valves:choose>
+                <when>
+                    <!-- 执行带模板的screen，默认有layout。 -->
+                    <!-- 条件：指定target的后缀，在这里是null、jsp、vm、html为后缀 -->
+                    <pl-conditions:target-extension-condition extension="null,vm,jsp,html" />
+                    <!-- 和其它框架中的action概念不同，在Webx Turbine中，action是用来处理用户提交的表单的。 -->
+                    <pl-valves:performAction />
+                    <!-- 除了要执行screen中对应的.java还会执行screen中的.vm -->
+                    <pl-valves:performTemplateScreen />
+                    <!-- 映射模板，并将vm放入layout。 详情：webx开发文档 章节4.3 -->
+                    <pl-valves:renderTemplate />
+                </when>
+                <when>
+                    <!-- 执行不带模板的screen，无layout。 -->
+                    <pl-conditions:target-extension-condition extension="do" />
+                    <pl-valves:performAction />
+                    <!-- 只会执行screen中对应的.java -->
+                    <pl-valves:performScreen />
+                </when>
+                <when>
+                    <!-- 创建JSON，无模板，无layout。 -->
+                    <pl-conditions:target-extension-condition extension="json" />
+                    <pl-valves:performScreen />
+                    <pl-valves:renderResultAsJson />
+                </when>
+                <otherwise>
+                    <!-- 将控制交还给servlet engine。 -->
+                    <pl-valves:exit />
+                </otherwise>
+            </pl-valves:choose>
+
+            <!-- 假如rundata.setRedirectTarget()被设置，则循环，否则退出循环。 -->
+            <pl-valves:breakUnlessTargetRedirected />
+        </pl-valves:loop>
+
+    </services:pipeline>
+
+</beans:beans>
