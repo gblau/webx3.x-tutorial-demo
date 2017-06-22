@@ -45,7 +45,7 @@
              对于passthru请求，webx的request-contexts服务、错误处理、开发模式等服务仍然可用。 -->
     <init-param>
       <param-name>passthru</param-name>
-      <param-value><!-- 这里写领 --></param-value>
+      <param-value><!-- 这里写 --></param-value>
     </init-param>
 
   </filter>
