@@ -59,8 +59,7 @@ git命令行输入：
 
 #### 导入sql文件
 
-将resources下的webx_demo.sql文件导入数据库。
-
+将[sql](https://github.com/gblau/webx3.x-tutorial-demo/blob/dev/webx-demo.sql)文件导入数据库。
 
 
 ## Webx启动
